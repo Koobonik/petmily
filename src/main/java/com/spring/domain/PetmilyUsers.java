@@ -72,7 +72,7 @@ public class PetmilyUsers implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return this.userLoginPassword;
     }
 
     @Override
