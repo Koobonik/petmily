@@ -114,11 +114,11 @@ public class PetmilyUsersService {
     public ResponseEntity<?> login(LoginRequestDto loginRequestDto) throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException, ParseException {
         PetmilyUsers petmilyUsers = null;
         // 이메일인지 검증
-        if(ValidSomething.isValidEmail(loginRequestDto.getID())){
-            petmilyUsers = findByUserEmail(loginRequestDto.getID());
-        }
-        else if(ValidSomething.isValidNumber(loginRequestDto.getID())){
+        if(ValidSomething.isValidNumber(loginRequestDto.getID())){
             petmilyUsers = findByUserPhoneNumber(loginRequestDto.getID());
+        }
+        else if(ValidSomething.isValidEmail(loginRequestDto.getID())){
+            petmilyUsers = findByUserEmail(loginRequestDto.getID());
         }
 
         // 유저 정보 일치한다는 뜻
