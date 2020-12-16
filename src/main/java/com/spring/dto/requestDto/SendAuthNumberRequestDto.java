@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 @Setter
-@Data
+
 @Service
 @Getter
 public class SendAuthNumberRequestDto  {

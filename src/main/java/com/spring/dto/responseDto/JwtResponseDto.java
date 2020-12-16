@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.springframework.stereotype.Service;
 
-@Data
+
 @Service
 @Getter
 @AllArgsConstructor

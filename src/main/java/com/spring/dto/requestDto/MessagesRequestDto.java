@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Data
+
 @Service
 @Getter
 @AllArgsConstructor

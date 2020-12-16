@@ -3,7 +3,7 @@ package com.spring.dto.responseDto;
 import lombok.*;
 import org.springframework.stereotype.Service;
 
-@Data
+
 @Service
 @Getter
 @NoArgsConstructor
