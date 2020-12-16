@@ -1,6 +1,7 @@
 package com.spring.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.spring.configuration.web.PricingPlanService;
 import com.spring.domain.PetmilyRepository;
 import com.spring.domain.PetmilyUsers;
 import com.spring.domain.SmsAuth;
@@ -15,7 +16,6 @@ import com.spring.util.jwt.JwtTokenProvider;
 import io.github.bucket4j.Bucket;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
