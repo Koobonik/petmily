@@ -22,6 +22,6 @@ public class UsersService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
         log.info("유저 읽기 '{}'", phoneNumber);
-        return petmilyRepository.findByUserPhoneNumber(aes256Cipher.AES_Encode(phoneNumber));
+        return petmilyRepository.findByUserPhoneNumber(phoneNumber);
     }
 }
