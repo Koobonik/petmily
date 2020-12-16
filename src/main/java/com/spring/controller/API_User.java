@@ -1,10 +1,7 @@
 package com.spring.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.spring.dto.requestDto.LoginRequestDto;
-import com.spring.dto.requestDto.SendAuthNumberRequestDto;
-import com.spring.dto.requestDto.SignUpRequestDto;
-import com.spring.dto.requestDto.ValidateAuthNumberRequestDto;
+import com.spring.dto.requestDto.*;
 import com.spring.dto.responseDto.DefaultResponseDto;
 import com.spring.dto.responseDto.JwtResponseDto;
 import com.spring.dto.responseDto.PublicKeyResponseDto;
@@ -112,6 +109,15 @@ public class API_User {
     public ResponseEntity<?> renewalToken(@RequestParam String token) throws ParseException {
         log.info("renewalToken API를 이용하여 들어온 토큰 값 : {}", token);
         return petmilyUsersService.renewalToken(token);
+    }
+
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "정상적으로 로그아웃", response = JwtResponseDto.class)
+    })
+    @ApiOperation(value = "로그아웃 api", notes = "헤더에 jwt, refreshJwt를 넣어서 보내주세요.")
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody JwtRequestDto jwtRequestDto){
+        return petmilyUsersService.logout(jwtRequestDto);
     }
 
 //    // 공개키 발급
