@@ -60,7 +60,7 @@ public class API_User {
     @ApiOperation(value = "로그인", notes = "로그인 대한 요청을 보냅니다.\n" +
             "이메일 or 휴대폰 번호로 로그인이 가능합니다.")
     @PostMapping(value = "login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) throws NoSuchPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) throws NoSuchPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, ParseException {
         return petmilyUsersService.login(loginRequestDto);
     }
 
