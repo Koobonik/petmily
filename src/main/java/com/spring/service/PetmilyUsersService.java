@@ -15,16 +15,12 @@ import com.spring.util.cryptors.AES256Cipher;
 import com.spring.util.cryptors.UnidirectionalEncrypt;
 import com.spring.util.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.BadPaddingException;
@@ -114,11 +110,11 @@ public class PetmilyUsersService {
     public ResponseEntity<?> login(LoginRequestDto loginRequestDto) throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException, ParseException {
         PetmilyUsers petmilyUsers = null;
         // 이메일인지 검증
-        if(ValidSomething.isValidNumber(loginRequestDto.getID())){
-            petmilyUsers = findByUserPhoneNumber(loginRequestDto.getID());
+        if(ValidSomething.isValidNumber(loginRequestDto.getId())){
+            petmilyUsers = findByUserPhoneNumber(loginRequestDto.getId());
         }
-        else if(ValidSomething.isValidEmail(loginRequestDto.getID())){
-            petmilyUsers = findByUserEmail(loginRequestDto.getID());
+        else if(ValidSomething.isValidEmail(loginRequestDto.getId())){
+            petmilyUsers = findByUserEmail(loginRequestDto.getId());
         }
 
         // 유저 정보 일치한다는 뜻
