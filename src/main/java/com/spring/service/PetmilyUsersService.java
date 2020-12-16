@@ -3,6 +3,7 @@ package com.spring.service;
 import com.spring.domain.PetmilyRepository;
 import com.spring.domain.PetmilyUsers;
 import com.spring.domain.SmsAuth;
+import com.spring.dto.requestDto.JwtRequestDto;
 import com.spring.dto.requestDto.LoginRequestDto;
 import com.spring.dto.requestDto.SignUpRequestDto;
 import com.spring.dto.requestDto.ValidateAuthNumberRequestDto;
@@ -150,6 +151,16 @@ public class PetmilyUsersService {
         }
         log.info("refreshToken 토큰 유효하지 않아서 401 반환");
         return new ResponseEntity<>( new DefaultResponseDto(401, "토큰이 유효하지 않습니다."), HttpStatus.UNAUTHORIZED);
+    }
+
+    // 로그아웃
+    @Transactional
+    public ResponseEntity<?> logout(JwtRequestDto jwtRequestDto){
+        PetmilyUsers authUser = (PetmilyUsers) jwtTokenProvider.getAuthentication(jwtRequestDto.getJwt()).getPrincipal();
+        invalidationToken(jwtRequestDto.getJwt());
+        invalidationToken(jwtRequestDto.getRefreshJwt());
+        log.info("로그아웃 유저 아이디 : '{}' , 유저 이름 : '{}'", authUser.getId(), authUser.getUserNickName());
+        return new ResponseEntity<>(new DefaultResponseDto(200,"로그아웃 되었습니다."), HttpStatus.OK);
     }
     @Transactional
     public void invalidationToken(String token){
