@@ -22,6 +22,7 @@ build/
 out/
 *.yml
 *.pem
+*.jks
 
 ### NetBeans ###
 /nbproject/private/
