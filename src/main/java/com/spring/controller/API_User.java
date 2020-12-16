@@ -100,6 +100,20 @@ public class API_User {
         return smsAuthService.validateAuthNumber(validateAuthNumberRequestDto);
     }
 
+    // 토큰 재발급
+    //@ApiImplicitParams({@ApiImplicitParam(name = "refreshJwt", value = "로그인후 JWT 토큰을 발급받아야 합니다.", required = true, dataType = "String", paramType = "header")})
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "JWT (Json Web Token) 발행", response = JwtResponseDto.class),
+            @ApiResponse(code = 401, message = "토큰 유효하지 않음", response = DefaultResponseDto.class),
+            @ApiResponse(code = 409, message = "유저 계정에 문제가 있을경우", response = DefaultResponseDto.class)
+    })
+    @ApiOperation(value = "토큰 재발급", notes = "파라미터(token)에 담겨오는 토큰값으로 jwt와 refreshJwt를 재발급 받는다.")
+    @GetMapping("renewalToken")
+    public ResponseEntity<?> renewalToken(@RequestParam String token) throws ParseException {
+        log.info("renewalToken API를 이용하여 들어온 토큰 값 : {}", token);
+        return petmilyUsersService.renewalToken(token);
+    }
+
 //    // 공개키 발급
 //    @ApiOperation(value = "공개키 api", notes = "로그인이나 회원가입시 쓰이는 공개키 가져오는 api")
 //    @GetMapping("/getPublicKey")
