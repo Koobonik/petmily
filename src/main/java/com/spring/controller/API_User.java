@@ -77,6 +77,16 @@ public class API_User {
     }
 
     // 회원가입할 때 유저 닉네임 사용 가능한지 봐야함
+    @Transactional
+    @ApiOperation(value = "유저 닉네임 조회", notes = "가입하려는 사람의 닉네임이 중복되는지 검증합니다..")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "사용 가능한 닉네임이면 200 반환", response = DefaultResponseDto.class),
+            @ApiResponse(code = 409, message = "사용 불가능한 경우 409 반환", response = DefaultResponseDto.class),
+    })
+    @PostMapping("/checkUserNickName")
+    public ResponseEntity<?> checkUserNickName(@RequestParam String nickName) {
+        return petmilyUsersService.checkUserNickName(nickName);
+    }
 
     @Transactional
     @ApiOperation(value = "회원가입 sms 인증번호 요청", notes = "가입하려는 사람의 전화번호로 인증번호를 보냅니다.")

@@ -54,16 +54,25 @@ public class PetmilyUsersService {
         return petmilyRepository.save(petmilyUsers);
     }
 
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public PetmilyUsers findByUserPhoneNumber(String phoneNumber) throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         log.info("폰 번호로 유저 찾기 '{}'", phoneNumber);
         return petmilyRepository.findByUserPhoneNumber(aes256Cipher.AES_Encode(phoneNumber));
     }
 
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public PetmilyUsers findByUserEmail(String email) throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         log.info("이메일 주소로 유저 찾기 '{}'", email);
         return petmilyRepository.findByUserEmail(aes256Cipher.AES_Encode(email));
     }
 
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public boolean findCheckUserNickName(String nickName){
+        log.info("유저 닉네임 사용 가능한지 조회 '{}'", nickName);
+        return petmilyRepository.findByUserNickName(nickName) == null;
+    }
+
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public PetmilyUsers findByUserNickNameAndUserPhoneNumber(String nickName, String phoneNumber) throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         log.info("닉네임과 폰 번호로 유저 찾기 '{}' : '{}'", nickName, phoneNumber);
         return petmilyRepository.findByUserNickNameAndUserPhoneNumber(nickName, aes256Cipher.AES_Encode(phoneNumber));
@@ -186,5 +195,17 @@ public class PetmilyUsersService {
         petmilyUsers.setUserLoginPassword(unidirectionalEncrypt.encode(newPasswordRequestDto.getNewPassword()));
         smsAuthService.doCertificated(smsAuth, petmilyUsers.getId());
         return new ResponseEntity<>(new DefaultResponseDto(200, "성공적으로 비밀번호를 재설정 하였습니다."), HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> checkUserNickName(String nickName) {
+        if(!ValidSomething.isValidName(nickName)){
+            return new ResponseEntity<>(new DefaultResponseDto(409, "닉네임 양식을 벗어난 닉네임 입니다."), HttpStatus.CONFLICT);
+        }
+        if(findCheckUserNickName(nickName)){
+            return new ResponseEntity<>(new DefaultResponseDto(200, "사용 가능한 닉네임 입니다."), HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(new DefaultResponseDto(409, "이미 사용중인 닉네임 입니다."), HttpStatus.CONFLICT);
+        }
     }
 }

@@ -11,4 +11,6 @@ public interface PetmilyRepository extends JpaRepository<PetmilyUsers, Integer> 
 
     PetmilyUsers findByUserEmail(String email);
 
+    PetmilyUsers findByUserNickName(String nickName);
+
 }

@@ -17,7 +17,7 @@ import java.security.NoSuchAlgorithmException;
 public class AES256Cipher {
     private static volatile AES256Cipher INSTANCE;
 
-    private final ApplicationAESRead applicationYamlRead;
+    private final ApplicationAESRead applicationAESRead;
 
 
     private String secretKey; //32bit
@@ -33,10 +33,10 @@ public class AES256Cipher {
 //        return INSTANCE;
 //    }
 
-    public AES256Cipher(ApplicationAESRead applicationYamlRead) {
-        this.secretKey = applicationYamlRead.getSecretkey();
-        this.IV = applicationYamlRead.getIv();
-        this.applicationYamlRead = applicationYamlRead;
+    public AES256Cipher(ApplicationAESRead applicationAESRead) {
+        this.secretKey = applicationAESRead.getSecretkey();
+        this.IV = applicationAESRead.getIv();
+        this.applicationAESRead = applicationAESRead;
         //IV = secretKey.substring(0,16);
     }
 
