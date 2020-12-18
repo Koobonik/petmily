@@ -146,9 +146,9 @@ public class SmsAuthService {
     @Transactional
     public ResponseEntity<?> sendAuthNumber(String callNumber, String type, HttpServletRequest httpServletRequest) throws JsonProcessingException, ParseException, UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchPaddingException {
         PetmilyUsers petmilyUsers;
-        if (type.equals("아이디찾기")) {
+        if (type.equals("비밀번호찾기")) {
             String[] str = callNumber.split(":");
-            petmilyUsers = petmilyRepository.findByUserNickNameAndUserPhoneNumber(aes256Cipher.AES_Encode(str[0]), aes256Cipher.AES_Encode(str[1]));
+            petmilyUsers = petmilyRepository.findByUserNickNameAndUserPhoneNumber(str[0], aes256Cipher.AES_Encode(str[1]));
             callNumber = str[1];
             if (petmilyUsers == null)
                 return new ResponseEntity<>(new DefaultResponseDto(409, "정보가 올바르지 않습니다."), HttpStatus.CONFLICT);
@@ -236,7 +236,7 @@ public class SmsAuthService {
         // 사이즈가 2이상일 경우 처리해주면 된다. 그보다 낮을때는 블락시킬 것이 당연히 없다.
         Map<String, Boolean> list = new HashMap<>();
         if (smsAuthList != null && smsAuthList.size() >= 2) {
-            log.info("중복인증 방지 함수 작동! {}", secret);
+            log.info("중복인증 방지 함수 작동! '{}'", secret);
             for (SmsAuth smsAuth : smsAuthList) {
                 // callNumber 가져온다.
                 // Map에 일단 등록한다.

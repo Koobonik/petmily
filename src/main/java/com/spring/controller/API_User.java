@@ -75,6 +75,9 @@ public class API_User {
         }
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
+
+    // 회원가입할 때 유저 닉네임 사용 가능한지 봐야함
+
     @Transactional
     @ApiOperation(value = "회원가입 sms 인증번호 요청", notes = "가입하려는 사람의 전화번호로 인증번호를 보냅니다.")
     @ApiResponses({
@@ -87,7 +90,7 @@ public class API_User {
     }
 
     @Transactional
-    @ApiOperation(value = "회원가입 sms 인증번호 확인", notes = "인증번호를 확인하여 가입 가능 유무를 조회")
+    @ApiOperation(value = "각종 sms 인증번호 확인", notes = "인증번호를 확인하여 가입 가능 유무를 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "인증번호 정상적으로 확인", response = DefaultResponseDto.class),
             @ApiResponse(code = 409, message = "인증과정에서 에러가 있을 경우", response = DefaultResponseDto.class),
@@ -119,6 +122,28 @@ public class API_User {
     public ResponseEntity<?> logout(@RequestBody JwtRequestDto jwtRequestDto){
         return petmilyUsersService.logout(jwtRequestDto);
     }
+
+    // 비밀번호 찾기 인증번호 보내기
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공적으로 인증번호를 보냈을 경우", response = DefaultResponseDto.class)
+    })
+    @ApiOperation(value = "비밀번호 찾기 인증번호 보내기", notes = "휴대폰 번호와 닉네임이 일치하면 비밀번호를 재설정 할 수 있는 코드를 문자로 보냅니다.")
+    @PostMapping("/sendSmsForFindPassword")
+    public ResponseEntity<?> sendSmsForFindPassword(@RequestBody SendAuthNumberRequestDto sendAuthNumberRequestDto, HttpServletRequest httpServletRequest) throws NoSuchPaddingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, ParseException, UnsupportedEncodingException {
+        return smsAuthService.sendAuthNumber(sendAuthNumberRequestDto.getUserName()+":"+sendAuthNumberRequestDto.getCallNumber(), "비밀번호찾기", httpServletRequest);
+    }
+
+    // 비밀번호 찾기 인증번호 보내기
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "인증번호 입력과 함께 비밀번호를 성공적으로 변경하였을 경우", response = DefaultResponseDto.class)
+    })
+    @ApiOperation(value = "비밀번호 재설정하기", notes = "비밀번호를 재설정 할 수 있는 API 입니다.")
+    @PostMapping("/resetPassword")
+    public ResponseEntity<?> resetPassword(@RequestBody NewPasswordRequestDto newPasswordRequestDto) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, ParseException, UnsupportedEncodingException {
+        return petmilyUsersService.resetPassword(newPasswordRequestDto);
+    }
+
+
 
 //    // 공개키 발급
 //    @ApiOperation(value = "공개키 api", notes = "로그인이나 회원가입시 쓰이는 공개키 가져오는 api")

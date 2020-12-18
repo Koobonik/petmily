@@ -3,10 +3,7 @@ package com.spring.service;
 import com.spring.domain.PetmilyRepository;
 import com.spring.domain.PetmilyUsers;
 import com.spring.domain.SmsAuth;
-import com.spring.dto.requestDto.JwtRequestDto;
-import com.spring.dto.requestDto.LoginRequestDto;
-import com.spring.dto.requestDto.SignUpRequestDto;
-import com.spring.dto.requestDto.ValidateAuthNumberRequestDto;
+import com.spring.dto.requestDto.*;
 import com.spring.dto.responseDto.DefaultResponseDto;
 import com.spring.dto.responseDto.JwtResponseDto;
 import com.spring.util.DateCreator;
@@ -58,11 +55,18 @@ public class PetmilyUsersService {
     }
 
     public PetmilyUsers findByUserPhoneNumber(String phoneNumber) throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+        log.info("폰 번호로 유저 찾기 '{}'", phoneNumber);
         return petmilyRepository.findByUserPhoneNumber(aes256Cipher.AES_Encode(phoneNumber));
     }
 
     public PetmilyUsers findByUserEmail(String email) throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+        log.info("이메일 주소로 유저 찾기 '{}'", email);
         return petmilyRepository.findByUserEmail(aes256Cipher.AES_Encode(email));
+    }
+
+    public PetmilyUsers findByUserNickNameAndUserPhoneNumber(String nickName, String phoneNumber) throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+        log.info("닉네임과 폰 번호로 유저 찾기 '{}' : '{}'", nickName, phoneNumber);
+        return petmilyRepository.findByUserNickNameAndUserPhoneNumber(nickName, aes256Cipher.AES_Encode(phoneNumber));
     }
 
 //    public PetmilyUsers findByUserEmailAndUserLoginPassword(String id, String password) throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
@@ -165,5 +169,22 @@ public class PetmilyUsersService {
         logoutValueOperations.set(token, String.valueOf(petmilyUsers.getId())); // redis set 명령어
 
         log.info("토큰 무효화! 유저 아이디 : '{}' , 유저 이름 : '{}'", petmilyUsers.getId(), petmilyUsers.getUserNickName());
+    }
+
+    @Transactional
+    public ResponseEntity<?> resetPassword(NewPasswordRequestDto newPasswordRequestDto) throws NoSuchPaddingException, ParseException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException {
+        if(smsAuthService.validateAuthNumber(newPasswordRequestDto).getStatusCodeValue() != 200){
+            return smsAuthService.validateAuthNumber(newPasswordRequestDto);
+        }
+        log.info("코드 검증됨!");
+        SmsAuth smsAuth = smsAuthService.findSmsAuth(newPasswordRequestDto.getAuthSms());
+        PetmilyUsers petmilyUsers = findByUserNickNameAndUserPhoneNumber(newPasswordRequestDto.getUserName(), newPasswordRequestDto.getCallNumber());
+        if(petmilyUsers == null){
+            return new ResponseEntity<>(new DefaultResponseDto(409, "유저를 찾을 수 없습니다."), HttpStatus.CONFLICT);
+        }
+        UnidirectionalEncrypt unidirectionalEncrypt = new UnidirectionalEncrypt();
+        petmilyUsers.setUserLoginPassword(unidirectionalEncrypt.encode(newPasswordRequestDto.getNewPassword()));
+        smsAuthService.doCertificated(smsAuth, petmilyUsers.getId());
+        return new ResponseEntity<>(new DefaultResponseDto(200, "성공적으로 비밀번호를 재설정 하였습니다."), HttpStatus.OK);
     }
 }

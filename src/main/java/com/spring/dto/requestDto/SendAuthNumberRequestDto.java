@@ -1,13 +1,11 @@
 package com.spring.dto.requestDto;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 @Setter
-
 @Service
 @Getter
 public class SendAuthNumberRequestDto  {
