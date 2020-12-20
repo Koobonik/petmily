@@ -90,7 +90,7 @@ public class API_User {
             @ApiResponse(code = 409, message = "비밀번호 사용 불가능", response = DefaultResponseDto.class),
     })
     @ApiOperation(value = "비밀번호 사용 가능 유무 판단", notes = "비밀번호가 사용 가능 한지 체크")
-    @PostMapping(value = "checkPassword")
+    @GetMapping(value = "checkPassword")
     public ResponseEntity<?> checkPassword(@RequestParam String password) {
         return petmilyUsersService.checkPassword(password);
     }
