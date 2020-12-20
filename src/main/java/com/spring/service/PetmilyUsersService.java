@@ -82,6 +82,12 @@ public class PetmilyUsersService {
 //    public PetmilyUsers findByUserEmailAndUserLoginPassword(String id, String password) throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
 //        return petmilyRepository.findByUserEmailAndUserLoginPassword(aes256Cipher.AES_Encode(id),unidirectionalEncrypt.matches(password) )
 //    }
+    public ResponseEntity<?> checkPassword(String password){
+        if(ValidSomething.isValidPassword(password)){
+            return new ResponseEntity<>(new DefaultResponseDto(200,"사용 가능한 비밀번호 입니다."), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new DefaultResponseDto(409, "비밀번호 양식을 벗어났습니다. 8~32자 이내로 영문+숫자+특수문자를 조합하여 입력해주세요"), HttpStatus.CONFLICT);
+    }
 
     @Transactional
     public ResponseEntity<?> saveUser(SignUpRequestDto signUpRequestDto) throws Exception {

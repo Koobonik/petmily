@@ -85,6 +85,16 @@ public class API_User {
         return petmilyUsersService.checkUserNickName(nickName);
     }
 
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "비밀번호 사용 가능", response = DefaultResponseDto.class),
+            @ApiResponse(code = 409, message = "비밀번호 사용 불가능", response = DefaultResponseDto.class),
+    })
+    @ApiOperation(value = "비밀번호 사용 가능 유무 판단", notes = "비밀번호가 사용 가능 한지 체크")
+    @PostMapping(value = "checkPassword")
+    public ResponseEntity<?> checkPassword(@RequestParam String password) {
+        return petmilyUsersService.checkPassword(password);
+    }
+
     @Transactional
     @ApiOperation(value = "회원가입 sms 인증번호 요청", notes = "가입하려는 사람의 전화번호로 인증번호를 보냅니다.")
     @ApiResponses({
