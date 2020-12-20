@@ -23,7 +23,7 @@ public class SwaggerConfig {
     @Bean
     public Docket apiV1() {
         version = "V1";
-        title = "REST API ";
+        title = "펫밀리 앱 관련 API ";
         return new Docket(DocumentationType.SWAGGER_2)
                 .useDefaultResponseMessages(false)
                 .groupName(version)
@@ -52,7 +52,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo(String title, String version) {
         return new ApiInfo(
                 title,
-                "통합 API Docs",
+                "펫밀리 API Docs",
                 version,
                 "www.example.com",
                 new Contact("개발자에게 문의하기", "https://github.com/Koobonik", ""),
