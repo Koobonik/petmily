@@ -12,12 +12,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Entity
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
 public class PetmilyUsers implements UserDetails {
     // long 으로 해줘야 이후에 편하다.
     @Id

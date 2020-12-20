@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.spring.dto.requestDto.*;
 import com.spring.dto.responseDto.DefaultResponseDto;
 import com.spring.dto.responseDto.JwtResponseDto;
-import com.spring.dto.responseDto.PublicKeyResponseDto;
+import com.spring.service.EmailAuthService;
 import com.spring.service.PetmilyUsersService;
 import com.spring.service.SmsAuthService;
 import com.spring.util.jwt.JwtTokenProvider;
@@ -19,15 +19,11 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.RSAPublicKeySpec;
 import java.text.ParseException;
-import java.util.Collections;
 
 @Log4j2
 @RestController
@@ -39,6 +35,7 @@ public class API_User {
     private final JwtTokenProvider jwtTokenProvider;
     private final SmsAuthService smsAuthService;
     private final PetmilyUsersService petmilyUsersService;
+    private final EmailAuthService emailAuthService;
 
     @ApiResponses({
             @ApiResponse(code = 200, message = "회원가입이 정상적으로 이루어졌을 경우", response = JwtResponseDto.class),
@@ -165,6 +162,28 @@ public class API_User {
         return petmilyUsersService.validPassword(passwordConfirmRequestDto, httpServletRequest);
     }
 
+    // 이메일 등록하기위한 인증번호 전송
+    @ApiOperation(value = "이메일로 인증번호 보내기", notes = "이메일 인증을 위해 인증번호를 보냅니다.\n" +
+            "유저는 이메일로 온 인증번호를 앱 상에서 입력하여 이메일 인증을 완료합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "이메일 전송", response = DefaultResponseDto.class),
+            @ApiResponse(code = 500, message = "이메일 전송에 에러가 발생한 경우", response = DefaultResponseDto.class),
+    })
+    @PostMapping("/sendEmailAuthNumber")
+    public ResponseEntity<?> sendEmailAuthNumber(@RequestBody EmailRequestDto emailRequestDto, HttpServletRequest httpServletRequest) {
+        return emailAuthService.sendEmailForAuthEmail(emailRequestDto, httpServletRequest);
+    }
+
+    // 이메일 등록하기
+    @ApiOperation(value = "이메일로 온 인증번호 입력하기", notes = "이메일로 온 인증번호를 앱 상에서 입력하여 이메일 인증을 완료합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "이메일 전송", response = DefaultResponseDto.class),
+            @ApiResponse(code = 500, message = "이메일 전송에 에러가 발생한 경우", response = DefaultResponseDto.class),
+    })
+    @PostMapping("/emailAuth")
+    public ResponseEntity<?> emailAuth(@RequestBody EmailAuthRequestDto emailAuthRequestDto, HttpServletRequest httpServletRequest) {
+        return emailAuthService.authEmail(emailAuthRequestDto, httpServletRequest);
+    }
 
 
 //    // 공개키 발급
