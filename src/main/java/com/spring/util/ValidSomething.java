@@ -41,7 +41,9 @@ public class ValidSomething {
     
     public static boolean isValidName(String name){
         boolean err = false;//
-        String regex = "^.*(?=^.{2,20}$)[가-힣0-9a-zA-Z].*$"; //숫자만\
+        //String regex = "^.*(?=^.{2,20}$)[가-힣0-9a-zA-Z].*$"; //숫자만\ //(?=.*\d)(?=.*[a-zA-Z])
+//        String regex = "^.*(?=^.{2,20}$)([가-힣])*([a-zA-Z])*([0-9]).*$";
+        String regex = "^.*(?=^.{2,14}$)([가-힣-a-z-A-Z])+[가-힣a-zA-Z0-9]*$";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(name);
         if (m.matches()) {
