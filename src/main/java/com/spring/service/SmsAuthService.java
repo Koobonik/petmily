@@ -107,6 +107,8 @@ public class SmsAuthService {
             return new ResponseEntity<>(new DefaultResponseDto(409, "이름을 입력해주세요."), HttpStatus.CONFLICT);
         } else if (!ValidSomething.isValidName(name)) {
             return new ResponseEntity<>(new DefaultResponseDto(409, "이름은 한글, 영문, 숫자만 입력 가능합니다."), HttpStatus.CONFLICT);
+        } else if(!ValidSomething.canUseNickName(name)){
+            return new ResponseEntity<>(new DefaultResponseDto(409, "불용어가 포함되어 있습니다."), HttpStatus.CONFLICT);
         }
         PetmilyUsers petmilyUsers = petmilyRepository.findByUserPhoneNumber(aes256Cipher.AES_Encode(callNumber));
         if (petmilyUsers != null) {
@@ -129,7 +131,8 @@ public class SmsAuthService {
             log.info("SMS {} 트래픽 초과!!!", callNumber);
             return new ResponseEntity<>(new DefaultResponseDto(409, "인증 문자는 30초에 한번 씩 보낼 수 있습니다."), HttpStatus.CONFLICT);
         }
-        SendSmsResponseDto sendSmsResponseDto = smsService.sendSms(callNumber, "[펫밀리]\n" + name + "님 인증번호\n[ " + smsAuth.getAuthNumber() + " ]\n을 입력해주세요.");
+//        SendSmsResponseDto sendSmsResponseDto = smsService.sendSms(callNumber, "[펫밀리]\n" + name + "님 인증번호\n[ " + "" + " ]\n을 입력해주세요.");
+        SendSmsResponseDto sendSmsResponseDto = smsService.sendSms(callNumber, "Your code is: 123456");
         if (sendSmsResponseDto.getStatusCode().equals("202")) {
             smsAuth.setSecret(createSecret(name, callNumber, smsAuth.getAuthNumber()));
             smsAuth.setWhereToUse("회원가입");

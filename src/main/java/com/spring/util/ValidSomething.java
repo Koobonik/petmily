@@ -43,6 +43,9 @@ public class ValidSomething {
         boolean err = false;//
         //String regex = "^.*(?=^.{2,20}$)[가-힣0-9a-zA-Z].*$"; //숫자만\ //(?=.*\d)(?=.*[a-zA-Z])
 //        String regex = "^.*(?=^.{2,20}$)([가-힣])*([a-zA-Z])*([0-9]).*$";
+        if(!canUseNickName(name)){
+            return false;
+        }
         String regex = "^.*(?=^.{2,14}$)([가-힣-a-z-A-Z])+[가-힣a-zA-Z0-9]*$";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(name);
@@ -51,4 +54,60 @@ public class ValidSomething {
         }
         return err;
     }
+
+    public static boolean canUseNickName(String sText) {
+        String filter = "fuck|shit|개새끼|씨발|씨1발|씨2발|씨3발|병신|애미|뒤진|니미|시팔|호구|호갱|새키|보지|자지|짬지|고보딩지|중보딩지|초보딩지|대보딩지|섹스|성관계|뒤질|죽을|좆|개년|개새|개씨발|" +
+                "고자|급식충|김치녀|꺼저|꺼져|꼬라봐|꼴불견|꼴통|느금마|느개비|니기미|니미럴|샹년|썅년|나가뒤져|닥쳐|돌았냐|뒈지다|딸딸이|또라이|돌아이|똘마니|똘추|띨빵|띨띨이|" +
+                "렉카충|맘충|매국노|메갈리아|일베충|무뇌|미친|버러지|변태|따까리|보슬아치|보추|고환|븅딱|바카|빠가|빨갱이|빨통|뻐큐" +
+                "빨통|삐꾸|싸가지|썩을|씹년|씹쓰레기|씹치남|씹치녀|애비충|역겹|엠창|잡놈|젖|죶|호로|패드립";
+        Pattern p = Pattern.compile(filter, Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(sText);
+
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) {
+            //System.out.println(m.group());
+            m.appendReplacement(sb, maskWord(m.group()));
+            return false;
+        }
+        m.appendTail(sb);
+
+        //System.out.println(sb.toString());
+        return true;
+    }
+
+//    public static String validText(String sText){
+//        Pattern p = Pattern.compile(badWordList, Pattern.CASE_INSENSITIVE);
+//        Matcher m = p.matcher(sText);
+//        StringBuffer sb = new StringBuffer();
+//
+//        while (m.find()) {
+//            // System.out.println(m.group());
+//            m.appendReplacement(sb, maskWord(m.group()));
+//        }
+//
+//        m.appendTail(sb);
+//
+//        //System.out.println(sb.toString());
+//        return stripHTML(sb.toString());
+//    }
+//    public static String stripHTML(String htmlStr) {
+//        Pattern p = Pattern.compile("<(?:.|\\s)*?>");
+//        Matcher m = p.matcher(htmlStr);
+//
+//        return m.replaceAll("");
+//    }
+
+    public static String maskWord(String word) {
+        StringBuffer buff = new StringBuffer();
+        char[] ch = word.toCharArray();
+        for (int i = 0; i < ch.length; i++) {
+            if (i < 1) {
+                buff.append(ch[i]);
+            } else {
+                buff.append("*");
+            }
+        }
+        return buff.toString();
+    }
+
 }

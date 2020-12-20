@@ -205,6 +205,9 @@ public class PetmilyUsersService {
     }
 
     public ResponseEntity<?> checkUserNickName(String nickName) {
+        if(!ValidSomething.canUseNickName(nickName)){
+            return new ResponseEntity<>(new DefaultResponseDto(409, "불용어가 포함되어 있습니다."), HttpStatus.CONFLICT);
+        }
         if(!ValidSomething.isValidName(nickName)){
             return new ResponseEntity<>(new DefaultResponseDto(409, "닉네임 양식을 벗어난 닉네임 입니다."), HttpStatus.CONFLICT);
         }

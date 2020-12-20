@@ -1,5 +1,6 @@
 package com.spring;
 
+import com.spring.util.ValidSomething;
 import com.spring.util.cryptors.AES256Cipher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ class ApplicationTests {
     @Test
     public void asd() throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         System.out.println(aes256Cipher.AES_Decode("66Pt4I7SrkIU9a3BeauAOn2UpvJ8P+qOIX/2wxo5EnU="));
+        System.out.println(ValidSomething.canUseNickName("구백군"));
     }
 
 }
