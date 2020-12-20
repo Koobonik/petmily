@@ -153,6 +153,18 @@ public class API_User {
         return petmilyUsersService.resetPassword(newPasswordRequestDto);
     }
 
+    //
+    @ApiOperation(value = "비밀번호 확인 API", notes = "토큰값과 매칭되는 유저를 찾고 비밀번호를 대조 하여 검증 합니다.\n" +
+            "유효하다면 200을 반환합니다.\n" +
+            "프론트엔드에서는 개인정보 수정 페이지를 보여줍니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "true/false 반환", response = DefaultResponseDto.class),
+    })
+    @PostMapping("/password")
+    public ResponseEntity<?> password(@RequestBody PasswordConfirmRequestDto passwordConfirmRequestDto, HttpServletRequest httpServletRequest) {
+        return petmilyUsersService.validPassword(passwordConfirmRequestDto, httpServletRequest);
+    }
+
 
 
 //    // 공개키 발급

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
@@ -207,5 +208,20 @@ public class PetmilyUsersService {
         else {
             return new ResponseEntity<>(new DefaultResponseDto(409, "이미 사용중인 닉네임 입니다."), HttpStatus.CONFLICT);
         }
+    }
+
+    public ResponseEntity<?> validPassword(PasswordConfirmRequestDto passwordConfirmRequestDto, HttpServletRequest httpServletRequest) {
+        String token = jwtTokenProvider.resolveToken(httpServletRequest);
+        if(jwtTokenProvider.validateToken(token)){
+            PetmilyUsers petmilyUsers = (PetmilyUsers) jwtTokenProvider.getAuthentication(token).getPrincipal();
+            UnidirectionalEncrypt unidirectionalEncrypt = new UnidirectionalEncrypt();
+            if(unidirectionalEncrypt.matches(passwordConfirmRequestDto.getUserLoginPassword(), petmilyUsers.getPassword())){
+                return new ResponseEntity<>(new DefaultResponseDto(200, "성공적으로 인증되었습니다."), HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(new DefaultResponseDto(409, "비밀번호가 일치하지 않습니다."), HttpStatus.CONFLICT);
+            }
+        }
+        return jwtTokenProvider.tokenIsInvalidation(token);
     }
 }
