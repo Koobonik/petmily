@@ -131,8 +131,7 @@ public class SmsAuthService {
             log.info("SMS {} 트래픽 초과!!!", callNumber);
             return new ResponseEntity<>(new DefaultResponseDto(409, "인증 문자는 30초에 한번 씩 보낼 수 있습니다."), HttpStatus.CONFLICT);
         }
-//        SendSmsResponseDto sendSmsResponseDto = smsService.sendSms(callNumber, "[펫밀리]\n" + name + "님 인증번호\n[ " + "" + " ]\n을 입력해주세요.");
-        SendSmsResponseDto sendSmsResponseDto = smsService.sendSms(callNumber, "Your code is: 123456");
+        SendSmsResponseDto sendSmsResponseDto = smsService.sendSms(callNumber, "[펫밀리]\n" + name + "님\n인증번호는 " + smsAuth.getAuthNumber() + " 입니다.");
         if (sendSmsResponseDto.getStatusCode().equals("202")) {
             smsAuth.setSecret(createSecret(name, callNumber, smsAuth.getAuthNumber()));
             smsAuth.setWhereToUse("회원가입");
@@ -183,7 +182,7 @@ public class SmsAuthService {
             log.info("SMS {} 트래픽 초과!!!", callNumber);
             return new ResponseEntity<>(new DefaultResponseDto(409, "인증 문자는 30초에 한번 씩 보낼 수 있습니다."), HttpStatus.CONFLICT);
         }
-        SendSmsResponseDto sendSmsResponseDto = smsService.sendSms(callNumber, "[펫밀리]\n" + petmilyUsers.getUserNickName() + "님 인증번호\n[ " + smsAuth.getAuthNumber() + " ]\n을 입력해주세요.");
+        SendSmsResponseDto sendSmsResponseDto = smsService.sendSms(callNumber, "[펫밀리]\n" + petmilyUsers.getUserNickName() + "님\n인증번호는 " + smsAuth.getAuthNumber() + " 입니다.");
         if (sendSmsResponseDto.getStatusCode().equals("202")) {
             smsAuth.setSecret(createSecret(petmilyUsers.getUserNickName(), callNumber, smsAuth.getAuthNumber()));
             smsAuth.setWhereToUse(type);
@@ -211,7 +210,7 @@ public class SmsAuthService {
             log.info("회원 탈퇴 SMS {} 트래픽 초과!!!", httpServletRequest.getRemoteAddr());
             return new ResponseEntity<>(new DefaultResponseDto(409, "인증 문자는 30초에 한번 씩 보낼 수 있습니다."), HttpStatus.CONFLICT);
         }
-        SendSmsResponseDto sendSmsResponseDto = smsService.sendSms(callNumber, "[펫밀리]\n" + authUser.getUserNickName() + "님 탈퇴 인증번호\n[ " + smsAuth.getAuthNumber() + " ]\n을 입력해주세요.");
+        SendSmsResponseDto sendSmsResponseDto = smsService.sendSms(callNumber, "[펫밀리]\n" + authUser.getUserNickName() + "님\n탈퇴 인증번호는 " + smsAuth.getAuthNumber() + " 입니다.");
         if (sendSmsResponseDto.getStatusCode().equals("202")) {
             log.info("회원 탈퇴 문자 정상 전송 '{}'", authUser.getUserNickName());
             smsAuth.setSecret(createSecret(authUser.getUserNickName(), callNumber, smsAuth.getAuthNumber()));
