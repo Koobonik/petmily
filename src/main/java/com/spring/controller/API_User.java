@@ -142,7 +142,9 @@ public class API_User {
 
     // 비밀번호 찾기 인증번호 보내기
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공적으로 인증번호를 보냈을 경우", response = DefaultResponseDto.class)
+            @ApiResponse(code = 200, message = "성공적으로 인증번호를 보냈을 경우", response = DefaultResponseDto.class),
+            @ApiResponse(code = 409, message = "인증번호 보내는데 인증 정보가 불충분할 경우", response = DefaultResponseDto.class),
+            @ApiResponse(code = 500, message = "서버에서 에러가 발생했을경우", response = DefaultResponseDto.class)
     })
     @ApiOperation(value = "비밀번호 찾기 인증번호 보내기", notes = "휴대폰 번호와 닉네임이 일치하면 비밀번호를 재설정 할 수 있는 코드를 문자로 보냅니다.")
     @PostMapping("/sendSmsForFindPassword")
