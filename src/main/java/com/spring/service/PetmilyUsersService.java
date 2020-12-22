@@ -120,7 +120,7 @@ public class PetmilyUsersService {
         petmilyUsers.setUserLoginPassword(unidirectionalEncrypt.encode(petmilyUsers.getUserLoginPassword()));
         petmilyUsers.setUserPhoneNumber(aes256Cipher.AES_Encode(petmilyUsers.getUserPhoneNumber()));
         petmilyUsers.setLastLoginDateTime(new DateCreator().getTimestamp());
-
+        petmilyUsers.setIsOut(false);
         smsAuthService.doCertificated(smsAuth,petmilyUsers.getId());
         save(petmilyUsers);
         return new ResponseEntity<>(jwtTokenProvider.createTokens(petmilyUsers.getUserPhoneNumber(), petmilyUsers.getRoles()), HttpStatus.OK);
