@@ -149,9 +149,10 @@ public class SmsAuthService {
     public ResponseEntity<?> sendAuthNumber(String callNumber, String type, HttpServletRequest httpServletRequest) throws JsonProcessingException, ParseException, UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchPaddingException {
         PetmilyUsers petmilyUsers;
         if (type.equals("비밀번호찾기")) {
-            String[] str = callNumber.split(":");
-            petmilyUsers = petmilyRepository.findByUserNickNameAndUserPhoneNumber(str[0], aes256Cipher.AES_Encode(str[1]));
-            callNumber = str[1];
+//            String[] str = callNumber.split(":");
+//            petmilyUsers = petmilyRepository.findByUserNickNameAndUserPhoneNumber(str[0], aes256Cipher.AES_Encode(str[1]));
+//            callNumber = str[1];
+            petmilyUsers = petmilyRepository.findByUserPhoneNumber(aes256Cipher.AES_Encode(callNumber));
             if (petmilyUsers == null)
                 return new ResponseEntity<>(new DefaultResponseDto(409, "정보가 올바르지 않습니다."), HttpStatus.CONFLICT);
         }

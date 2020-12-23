@@ -189,15 +189,14 @@ public class PetmilyUsersService {
 
     @Transactional
     public ResponseEntity<?> resetPassword(NewPasswordRequestDto newPasswordRequestDto) throws NoSuchPaddingException, ParseException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException {
-        if(smsAuthService.validateAuthNumber(newPasswordRequestDto).getStatusCodeValue() != 200){
-            return smsAuthService.validateAuthNumber(newPasswordRequestDto);
+        PetmilyUsers petmilyUsers = findByUserPhoneNumber(newPasswordRequestDto.getCallNumber());
+        if(petmilyUsers == null) return new ResponseEntity<>(new DefaultResponseDto(409, "잘못된 정보 입니다."), HttpStatus.CONFLICT);
+        ValidateAuthNumberRequestDto validateAuthNumberRequestDto = new ValidateAuthNumberRequestDto(newPasswordRequestDto.getAuthSms(), newPasswordRequestDto.getCallNumber(), petmilyUsers.getUserNickName());
+        if(smsAuthService.validateAuthNumber(validateAuthNumberRequestDto).getStatusCodeValue() != 200){
+            return smsAuthService.validateAuthNumber(validateAuthNumberRequestDto);
         }
         log.info("코드 검증됨!");
         SmsAuth smsAuth = smsAuthService.findSmsAuth(newPasswordRequestDto.getAuthSms());
-        PetmilyUsers petmilyUsers = findByUserNickNameAndUserPhoneNumber(newPasswordRequestDto.getUserName(), newPasswordRequestDto.getCallNumber());
-        if(petmilyUsers == null){
-            return new ResponseEntity<>(new DefaultResponseDto(409, "유저를 찾을 수 없습니다."), HttpStatus.CONFLICT);
-        }
         UnidirectionalEncrypt unidirectionalEncrypt = new UnidirectionalEncrypt();
         petmilyUsers.setUserLoginPassword(unidirectionalEncrypt.encode(newPasswordRequestDto.getNewPassword()));
         smsAuthService.doCertificated(smsAuth, petmilyUsers.getId());

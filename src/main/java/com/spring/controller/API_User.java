@@ -148,8 +148,8 @@ public class API_User {
     })
     @ApiOperation(value = "비밀번호 찾기 인증번호 보내기", notes = "휴대폰 번호와 닉네임이 일치하면 비밀번호를 재설정 할 수 있는 코드를 문자로 보냅니다.")
     @PostMapping("/sendSmsForFindPassword")
-    public ResponseEntity<?> sendSmsForFindPassword(@RequestBody SendAuthNumberRequestDto sendAuthNumberRequestDto, HttpServletRequest httpServletRequest) throws NoSuchPaddingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, ParseException, UnsupportedEncodingException {
-        return smsAuthService.sendAuthNumber(sendAuthNumberRequestDto.getUserName()+":"+sendAuthNumberRequestDto.getCallNumber(), "비밀번호찾기", httpServletRequest);
+    public ResponseEntity<?> sendSmsForFindPassword(@RequestBody CallNumberRequestDto callNumberRequestDto, HttpServletRequest httpServletRequest) throws NoSuchPaddingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, ParseException, UnsupportedEncodingException {
+        return smsAuthService.sendAuthNumber(callNumberRequestDto.getCallNumber(), "비밀번호찾기", httpServletRequest);
     }
 
 //    // 공개키 발급
