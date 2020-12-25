@@ -62,7 +62,7 @@ public class PetmilyUsers implements UserDetails {
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
-    private List<String> pets = new ArrayList<>();
+    private List<Integer> pets = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -78,7 +78,7 @@ public class PetmilyUsers implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.userEmail;
+        return this.userPhoneNumber;
     }
 
     @Override
@@ -98,6 +98,6 @@ public class PetmilyUsers implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return this.isOut;
     }
 }

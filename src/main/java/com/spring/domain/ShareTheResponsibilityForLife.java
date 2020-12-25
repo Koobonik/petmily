@@ -46,11 +46,26 @@ public class ShareTheResponsibilityForLife {
     @Column(name = "update_date", columnDefinition = "datetime")
     private Timestamp updateDate;
 
+    // 신고 회수
+    @Column(name = "report_count", nullable = false)
+    private int reportCount = 0;
+
+    // 비디오를 요구하는지 안하는지
     @Column(name = "is_video", nullable = false, columnDefinition = "TINYINT(4)")
     private boolean isVideo;
 
+    // 분양이 완료 되었는지!
     @Column(name = "is_active", nullable = false, columnDefinition = "TINYINT(4)")
     private boolean isActive = true;
+
+    // 게시글 신고회수 누적으로 숨김처리된 것.
+    @Column(name = "is_hide", nullable = false, columnDefinition = "TINYINT(4)")
+    private boolean isHide = false;
+
+    // 유저가 삭제할 경우
+    @Column(name = "id_delete", nullable = false, columnDefinition = "TINYINT(4)")
+    private boolean idDelete = false;
+
 
 
     @ElementCollection(fetch = FetchType.EAGER)
