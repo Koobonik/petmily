@@ -1,13 +1,10 @@
 package com.spring.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.spring.dto.requestDto.*;
 import com.spring.dto.responseDto.DefaultResponseDto;
-import com.spring.dto.responseDto.JwtResponseDto;
+import com.spring.dto.responseDto.UserResponseDto;
 import com.spring.service.EmailAuthService;
 import com.spring.service.PetmilyUsersService;
-import com.spring.service.SmsAuthService;
-import com.spring.util.jwt.JwtTokenProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -22,9 +19,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -39,6 +34,16 @@ public class API_Auth {
 
     private final PetmilyUsersService petmilyUsersService;
     private final EmailAuthService emailAuthService;
+
+    // 비밀번호 찾기
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "유저의 정보를 성공적으로 가져올 경우", response = UserResponseDto.class)
+    })
+    @ApiOperation(value = "토큰으로 유저 정보 가져오기", notes = "토큰이 유효하다면 유저의 정보를 반환 합니다.")
+    @PostMapping("/getUserDataUsingToken")
+    public ResponseEntity<?> getUserDataUsingToken(HttpServletRequest httpServletRequest){
+        return new ResponseEntity<>(petmilyUsersService.getUserDataUsingToken(httpServletRequest), HttpStatus.OK);
+    }
 
     // 비밀번호 찾기
     @ApiResponses({

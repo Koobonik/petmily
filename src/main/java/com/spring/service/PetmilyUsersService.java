@@ -6,12 +6,14 @@ import com.spring.domain.SmsAuth;
 import com.spring.dto.requestDto.*;
 import com.spring.dto.responseDto.DefaultResponseDto;
 import com.spring.dto.responseDto.JwtResponseDto;
+import com.spring.dto.responseDto.UserResponseDto;
 import com.spring.util.DateCreator;
 import com.spring.util.ValidSomething;
 import com.spring.util.cryptors.AES256Cipher;
 import com.spring.util.cryptors.UnidirectionalEncrypt;
 import com.spring.util.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -119,11 +121,29 @@ public class PetmilyUsersService {
         log.info("비밀번호 {}", petmilyUsers.getUserLoginPassword());
         petmilyUsers.setUserLoginPassword(unidirectionalEncrypt.encode(petmilyUsers.getUserLoginPassword()));
         petmilyUsers.setUserPhoneNumber(aes256Cipher.AES_Encode(petmilyUsers.getUserPhoneNumber()));
-        petmilyUsers.setLastLoginDateTime(new DateCreator().getTimestamp());
+        petmilyUsers.setLastLoginDateTime(today);
+        petmilyUsers.setSignUpDateTime(today);
         petmilyUsers.setIsOut(false);
+        petmilyUsers.setRoles(roles);
         smsAuthService.doCertificated(smsAuth,petmilyUsers.getId());
         save(petmilyUsers);
         return new ResponseEntity<>(jwtTokenProvider.createTokens(petmilyUsers.getUserPhoneNumber(), petmilyUsers.getRoles()), HttpStatus.OK);
+    }
+
+    // 토큰으로 유저 데이터 반환해주는거 만들자 // 뷰 만들거나 dto
+    @SneakyThrows
+    public UserResponseDto getUserDataUsingToken(HttpServletRequest httpServletRequest){
+        PetmilyUsers petmilyUsers = jwtTokenProvider.getPetmilyUsersFromToken(httpServletRequest);
+        log.info("유저 정보 반환 '{}'", petmilyUsers.getUserNickName());
+        return new UserResponseDto().builder()
+                .userPhoneNumber(aes256Cipher.AES_Decode(petmilyUsers.getUserPhoneNumber()))
+                .userEmail(aes256Cipher.AES_Decode(petmilyUsers.getUserEmail()))
+                .userFirebaseToken(petmilyUsers.getUserFirebaseToken())
+                .userNickName(petmilyUsers.getUserNickName())
+                .userImageUrl(petmilyUsers.getUserImageUrl())
+                .pets(petmilyUsers.getPets())
+                .roles(petmilyUsers.getRoles())
+                .build();
     }
 
     @Transactional
