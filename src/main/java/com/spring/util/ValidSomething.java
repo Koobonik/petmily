@@ -75,6 +75,17 @@ public class ValidSomething {
         return true;
     }
 
+    public static boolean isValidDate(String date) {
+        boolean err = false;
+        String regex = "^(19|20)\\d{2}[- /.]*(0[1-9]|1[012])[- /.]*(0[1-9]|[12][0-9]|3[01])$"; // 날짜 정규식
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(date);
+        if (m.matches()) {
+            err = true;
+        }
+        return err;
+    }
+
 //    public static String validText(String sText){
 //        Pattern p = Pattern.compile(badWordList, Pattern.CASE_INSENSITIVE);
 //        Matcher m = p.matcher(sText);

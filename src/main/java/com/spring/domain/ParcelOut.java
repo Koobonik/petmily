@@ -12,8 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity(name = "share_the_responsibility_for_life")
-public class ShareTheResponsibilityForLife {
+@Entity(name = "parcel_out")
+public class ParcelOut {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,16 +28,16 @@ public class ShareTheResponsibilityForLife {
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "pet_name", columnDefinition = "VARCHAR(50)")
+    @Column(name = "pet_name", columnDefinition = "VARCHAR(50)", nullable = false)
     private String petName;
 
     @Column(name = "pet_birth_day", columnDefinition = "VARCHAR(10)")
     private String petBirthDay;
 
-    @Column(name = "pet_kind", columnDefinition = "VARCHAR(20)")
+    @Column(name = "pet_kind", columnDefinition = "VARCHAR(20)", nullable = false)
     private String petKind;
 
-    @Column(name = "pet_gender", columnDefinition = "VARCHAR(20)")
+    @Column(name = "pet_gender", columnDefinition = "VARCHAR(20)", nullable = false)
     private String petGender;
 
     @Column(name = "created_date", nullable = false, columnDefinition = "datetime")
