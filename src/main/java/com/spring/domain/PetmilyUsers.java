@@ -40,7 +40,7 @@ public class PetmilyUsers implements UserDetails {
     @Column(columnDefinition = "VARCHAR(100)")
     private String userFirebaseToken;
 
-    @Column(columnDefinition = "VARCHAR(255)")
+    @Column(columnDefinition = "TEXT")
     private String userImageUrl;
 
     @Column(columnDefinition = "DATETIME")

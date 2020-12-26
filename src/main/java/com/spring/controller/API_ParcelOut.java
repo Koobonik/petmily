@@ -37,5 +37,14 @@ public class API_ParcelOut {
         return parcelOutService.getParcelOut(id);
     }
 
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공적으로 게시글 내용 반환", response = Location2.class)
+    })
+    @ApiOperation(value = "분양글 조회", notes = "")
+    @GetMapping("getParcelOut")
+    public ResponseEntity<?> getParcelOutList(@RequestParam(required = false) int id){
+        return parcelOutService.getParcelOut(id);
+    }
+
 
 }

@@ -141,7 +141,7 @@ public class PetmilyUsersService {
                 .userEmail(petmilyUsers.getUserEmail() != null ? aes256Cipher.AES_Decode(petmilyUsers.getUserEmail()) : "")
                 .userFirebaseToken(petmilyUsers.getUserFirebaseToken())
                 .userNickName(petmilyUsers.getUserNickName())
-                .userImageUrl(petmilyUsers.getUserImageUrl())
+                .userImageUrl(petmilyUsers.getUserImageUrl() == null ? "https://firebasestorage.googleapis.com/v0/b/petmily-dab67.appspot.com/o/Pets%2F%E1%84%86%E1%85%B5%E1%84%82%E1%85%B5%E1%84%91%E1%85%B5%E1%86%AB.png?alt=media&token=ca29a934-e3ba-4a6b-aa25-ea7ea8fc286c" : petmilyUsers.getUserImageUrl())
                 .pets(petmilyUsers.getPets())
                 .roles(petmilyUsers.getRoles())
                 .build();
