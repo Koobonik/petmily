@@ -17,7 +17,8 @@ public class CachingConfig {
     public CacheManager cacheManager() {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(Arrays.asList(
-                new ConcurrentMapCache("shareTheResponsibilityForLifeFindById")
+                new ConcurrentMapCache("parcelOutFindById"),
+                new ConcurrentMapCache("listParcelOutFindAllList")
                 ));
         return cacheManager;
     }

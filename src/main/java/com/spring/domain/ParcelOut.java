@@ -19,7 +19,7 @@ public class ParcelOut {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(name = "user_id", columnDefinition = "INT(11)")
+    @Column(name = "user_id", columnDefinition = "INT(11)", nullable = false)
     private int userId;
 
     @Column(name = "title", nullable = false, columnDefinition = "VARCHAR(255)")

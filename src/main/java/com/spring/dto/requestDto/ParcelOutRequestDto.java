@@ -32,14 +32,14 @@ public class ParcelOutRequestDto{
     @ApiModelProperty(value = "동물 품종", example = "1", required = true)
     private String petKind = "";
 
-    @ApiModelProperty(value = "성별(수컷/암컷)", example = "수컷", required = true)
+    @ApiModelProperty(value = "성별(MALE/FEMALE)", example = "FEMALE", required = true)
     private String petGender = "";
 
     @ApiModelProperty(value = "이미지들", required = true)
     private List<String> images;
 
 
-    public ParcelOut toEntity(){
+    public ParcelOut toEntity(int userId){
         return new ParcelOut().builder()
                 .title(title)
                 .description(description)
@@ -48,6 +48,7 @@ public class ParcelOutRequestDto{
                 .petKind(petKind)
                 .petGender(petGender)
                 .images(images)
+                .userId(userId)
                 .build();
     }
 }
