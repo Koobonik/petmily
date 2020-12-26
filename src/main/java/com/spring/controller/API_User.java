@@ -59,8 +59,8 @@ public class API_User {
     }
 
 
-    @PostMapping("jwtValidation")
-    public ResponseEntity<?> jwtValidation(@RequestHeader @RequestParam String jwt){
+    @GetMapping("jwtValidation")
+    public ResponseEntity<?> jwtValidation(@RequestParam String jwt){
         // 헤더에서 토큰값 추출
         log.info(jwt);
         // 토큰값이 유효한 경우

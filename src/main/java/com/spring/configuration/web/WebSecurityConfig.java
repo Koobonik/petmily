@@ -1,6 +1,5 @@
 package com.spring.configuration.web;
 
-import com.spring.util.jwt.JwtAuthenticationFilter;
 import com.spring.util.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

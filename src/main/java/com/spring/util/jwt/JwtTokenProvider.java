@@ -106,9 +106,6 @@ public class JwtTokenProvider {
     public String getUserPk(String token) {
         try{
             Claims claims = Jwts.parser().setSigningKey(tokenKey).parseClaimsJws(token).getBody();
-            log.info("토큰값 : '{}'", token);
-            log.info(claims.getIssuedAt());
-            log.info(claims.getExpiration());
         } catch (Exception ignored){
 
         }
