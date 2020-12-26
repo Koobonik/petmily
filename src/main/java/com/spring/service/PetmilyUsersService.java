@@ -138,7 +138,7 @@ public class PetmilyUsersService {
         log.info("유저 정보 반환 '{}'", petmilyUsers.getUserNickName());
         return new UserResponseDto().builder()
                 .userPhoneNumber(aes256Cipher.AES_Decode(petmilyUsers.getUserPhoneNumber()))
-                .userEmail(aes256Cipher.AES_Decode(petmilyUsers.getUserEmail()))
+                .userEmail(petmilyUsers.getUserEmail() != null ? aes256Cipher.AES_Decode(petmilyUsers.getUserEmail()) : "")
                 .userFirebaseToken(petmilyUsers.getUserFirebaseToken())
                 .userNickName(petmilyUsers.getUserNickName())
                 .userImageUrl(petmilyUsers.getUserImageUrl())
