@@ -22,12 +22,12 @@ import javax.servlet.http.HttpServletRequest;
 @Log4j2
 public class ParcelOutService {
 
-    private final ParcelOutRepository shareTheResponsibilityForLifeRepository;
+    private final ParcelOutRepository parcelOutRepository;
     private final JwtTokenProvider jwtTokenProvider;
     // 저장 C
     public ParcelOut save(ParcelOut parcelOut){
         log.info("게시글 저장 '{}'", parcelOut.getId());
-        return shareTheResponsibilityForLifeRepository.save(parcelOut);
+        return parcelOutRepository.save(parcelOut);
     }
 
 
@@ -36,7 +36,7 @@ public class ParcelOutService {
     @Cacheable("shareTheResponsibilityForLifeFindById")
     public ParcelOut findById(int id){
         log.info("특정 게시글 조회 '{}'", id);
-        return shareTheResponsibilityForLifeRepository.findById(id);
+        return parcelOutRepository.findById(id);
     }
 
     // 업데이트 U
@@ -44,7 +44,7 @@ public class ParcelOutService {
         PetmilyUsers petmilyUsers = jwtTokenProvider.getPetmilyUsersFromToken(httpServletRequest);
         if(petmilyUsers.getId() == parcelOut.getUserId() && !petmilyUsers.getIsOut()){
             log.info("게시글 업데이트! '{}' : 유저 이름 : '{}'", parcelOut.getId(), petmilyUsers.getUserNickName());
-            return shareTheResponsibilityForLifeRepository.save(parcelOut);
+            return parcelOutRepository.save(parcelOut);
         }
         log.info("비인가 업데이트! 접근 유저 아이디 '{}'  : 게시글에 있는 유저 아이디 '{}'", petmilyUsers.getId(), parcelOut.getId());
         return null;
