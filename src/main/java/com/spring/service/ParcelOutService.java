@@ -13,6 +13,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,10 @@ public class ParcelOutService {
     private final ParcelOutRepository parcelOutRepository;
     private final JwtTokenProvider jwtTokenProvider;
     // 저장 C
-
+    @Caching(evict = {
+            @CacheEvict(value="parcelOutFindById"),
+            @CacheEvict(value="listParcelOutFindAllList")
+    })
     public ParcelOut save(ParcelOut parcelOut){
         log.info("게시글 저장 '{}'", parcelOut.getId());
         return parcelOutRepository.save(parcelOut);
@@ -52,14 +56,18 @@ public class ParcelOutService {
     @Cacheable("listParcelOutFindAllList")
     public List<ParcelOut> findAllList(int id){
         if(id == 0){
-            parcelOutRepository.findAllListFirst();
+            log.info("게시글 조회 0");
+            return parcelOutRepository.findAllListFirst();
         }
         log.info("게시글 10개 조회 '{}'", id);
         return parcelOutRepository.findAllList(id);
     }
 
     // 업데이트 U
-    @CacheEvict(value="listParcelOutFindAllList") // 캐시 지움
+    @Caching(evict = {
+            @CacheEvict(value="parcelOutFindById"),
+            @CacheEvict(value="listParcelOutFindAllList")
+    })
     public ParcelOut update(ParcelOut parcelOut, HttpServletRequest httpServletRequest){
         PetmilyUsers petmilyUsers = jwtTokenProvider.getPetmilyUsersFromToken(httpServletRequest);
         if(petmilyUsers.getId() == parcelOut.getUserId() && !petmilyUsers.getIsOut()){
@@ -71,7 +79,10 @@ public class ParcelOutService {
     }
 
     // 삭제 D
-    @CacheEvict(value="listParcelOutFindAllList") // 캐시 지움
+    @Caching(evict = {
+            @CacheEvict(value="parcelOutFindById"),
+            @CacheEvict(value="listParcelOutFindAllList")
+    })
     public boolean delete(ParcelOut parcelOut, HttpServletRequest httpServletRequest){
         PetmilyUsers petmilyUsers = jwtTokenProvider.getPetmilyUsersFromToken(httpServletRequest);
         if(petmilyUsers.getId() == parcelOut.getUserId() && !petmilyUsers.getIsOut()){
@@ -85,6 +96,7 @@ public class ParcelOutService {
     }
 
 
+    // 분양글 작성
     public ResponseEntity<?> postParcelOut(ParcelOutRequestDto parcelOutRequestDto, HttpServletRequest httpServletRequest) throws ParseException {
         if(validateData(parcelOutRequestDto).getStatusCodeValue() != 200){
             return validateData(parcelOutRequestDto);
@@ -94,6 +106,8 @@ public class ParcelOutService {
         return new ResponseEntity<>(save(parcelOutRequestDto.toEntity(petmilyUsers.getId())), HttpStatus.OK);
     }
 
+    // 특정 분양글 읽기
+    @Cacheable("parcelOutFindById")
     public ResponseEntity<?> getParcelOut(int id) {
         ParcelOut parcelOut = findById(id);
         if(parcelOut != null){
@@ -104,6 +118,7 @@ public class ParcelOutService {
         return new ResponseEntity<>(new DefaultResponseDto(409, "조회되는 게시글이 없습니다."), HttpStatus.CONFLICT);
     }
 
+    @Cacheable("listParcelOutFindAllList")
     public ResponseEntity<?> getParcelOutList(int id) {
         List<ParcelOut> parcelOutList = findAllList(id);
         if(parcelOutList != null){
