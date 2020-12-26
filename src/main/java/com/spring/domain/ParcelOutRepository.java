@@ -7,9 +7,15 @@ public interface ParcelOutRepository extends JpaRepository<ParcelOut, Integer> {
     // 쿼리 작성해줘야함 boolean 값들 위주로
     @Query(
             nativeQuery = true,
-            value = "select * from parcel_out where is_hide = 0 and is_delete = 0 and order by id desc"
+            value = "select * from parcel_out where id = :id and is_hide = 0 and is_delete = 0 "
     )
     ParcelOut findById(int id);
+
+    @Query(
+            nativeQuery = true,
+            value = "select * from parcel_out where id < :id is_hide = 0 and is_delete = 0 order by id desc limit 10"
+    )
+    ParcelOut findAll(int id);
 
 
 }
