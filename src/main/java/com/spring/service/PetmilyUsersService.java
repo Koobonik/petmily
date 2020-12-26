@@ -169,7 +169,6 @@ public class PetmilyUsersService {
 
     // 토큰 갱신
     public ResponseEntity<?> renewalToken(String token) throws ParseException {
-        log.info("토큰 재발급! '{}' 유효한 값 '{}'", token, jwtTokenProvider.validateToken(token));
         if(jwtTokenProvider.validateToken(token)) {
             log.info("권한 통과");
             PetmilyUsers petmilyUsers = ((PetmilyUsers) jwtTokenProvider.getAuthentication(token).getPrincipal());
