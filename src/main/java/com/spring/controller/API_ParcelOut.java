@@ -1,6 +1,7 @@
 package com.spring.controller;
 
 import com.spring.domain.*;
+import com.spring.dto.requestDto.IDRequestDto;
 import com.spring.dto.requestDto.ParcelOutRequestDto;
 import com.spring.dto.responseDto.DefaultResponseDto;
 import com.spring.service.ParcelOutService;
@@ -51,7 +52,7 @@ public class API_ParcelOut {
     }
 
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공적으로 게시글 내용들 업데이트 후 게시글 데이터 다시 반환", response = ParcelOut[].class),
+            @ApiResponse(code = 200, message = "성공적으로 게시글 내용들 업데이트 후 게시글 데이터 다시 반환", response = ParcelOut.class),
             @ApiResponse(code = 409, message = "조회했더니 개수가 0개인경우", response = DefaultResponseDto.class),
     })
     @ApiOperation(value = "분양글 업데이트", notes = "")
@@ -62,13 +63,13 @@ public class API_ParcelOut {
     }
 
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공적으로 삭제 되었을 경우", response = ParcelOut.class),
+            @ApiResponse(code = 200, message = "성공적으로 삭제 되었을 경우", response = DefaultResponseDto.class),
             @ApiResponse(code = 409, message = "비인가된 접근일경우", response = DefaultResponseDto.class),
     })
-    @ApiOperation(value = "분양글 리스트 조회", notes = "")
+    @ApiOperation(value = "분양글  삭제", notes = "")
     @DeleteMapping("deleteParcelOutList")
-    public ResponseEntity<?> deleteParcelOut(@RequestBody ParcelOut parcelOut, HttpServletRequest httpServletRequest){
-        return parcelOutService.deleteParcelOut(parcelOut , httpServletRequest);
+    public ResponseEntity<?> deleteParcelOut(@RequestBody IDRequestDto idRequestDto, HttpServletRequest httpServletRequest){
+        return parcelOutService.deleteParcelOut(idRequestDto.getId() , httpServletRequest);
     }
 
 

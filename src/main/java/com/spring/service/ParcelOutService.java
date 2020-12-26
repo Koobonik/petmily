@@ -34,8 +34,8 @@ public class ParcelOutService {
     private final JwtTokenProvider jwtTokenProvider;
     // 저장 C
     @Caching(evict = {
-            @CacheEvict(value="parcelOutFindById"),
-            @CacheEvict(value="listParcelOutFindAllList")
+            @CacheEvict(value="parcelOutFindById", allEntries = true, cacheManager = "cacheManager"),
+            @CacheEvict(value="listParcelOutFindAllList", allEntries = true, cacheManager = "cacheManager")
     })
     public ParcelOut save(ParcelOut parcelOut){
         log.info("게시글 저장 '{}'", parcelOut.getId());
@@ -45,7 +45,9 @@ public class ParcelOutService {
 
     // 읽기 R
     @Transactional(readOnly = true)
-    @Cacheable("parcelOutFindById")
+    @Caching(cacheable = {
+            @Cacheable("parcelOutFindById")
+    })
     public ParcelOut findById(int id){
         log.info("특정 게시글 조회 '{}'", id);
         return parcelOutRepository.findById(id);
@@ -53,7 +55,9 @@ public class ParcelOutService {
 
     // 읽기 R
     @Transactional(readOnly = true)
-    @Cacheable("listParcelOutFindAllList")
+    @Caching(cacheable = {
+            @Cacheable("listParcelOutFindAllList")
+    })
     public List<ParcelOut> findAllList(int id){
         if(id == 0){
             log.info("게시글 조회 0");
@@ -65,8 +69,8 @@ public class ParcelOutService {
 
     // 업데이트 U
     @Caching(evict = {
-            @CacheEvict(value="parcelOutFindById"),
-            @CacheEvict(value="listParcelOutFindAllList")
+            @CacheEvict(value="parcelOutFindById", allEntries = true, cacheManager = "cacheManager"),
+            @CacheEvict(value="listParcelOutFindAllList", allEntries = true, cacheManager = "cacheManager")
     })
     public ParcelOut update(ParcelOut parcelOut, HttpServletRequest httpServletRequest){
         PetmilyUsers petmilyUsers = jwtTokenProvider.getPetmilyUsersFromToken(httpServletRequest);
@@ -80,11 +84,12 @@ public class ParcelOutService {
 
     // 삭제 D
     @Caching(evict = {
-            @CacheEvict(value="parcelOutFindById"),
-            @CacheEvict(value="listParcelOutFindAllList")
+            @CacheEvict(value="parcelOutFindById", allEntries = true, cacheManager = "cacheManager"),
+            @CacheEvict(value="listParcelOutFindAllList", allEntries = true, cacheManager = "cacheManager")
     })
-    public boolean delete(ParcelOut parcelOut, HttpServletRequest httpServletRequest){
+    public boolean delete(int parcelOutId, HttpServletRequest httpServletRequest){
         PetmilyUsers petmilyUsers = jwtTokenProvider.getPetmilyUsersFromToken(httpServletRequest);
+        ParcelOut parcelOut = findById(parcelOutId);
         if(petmilyUsers.getId() == parcelOut.getUserId() && !petmilyUsers.getIsOut()){
             log.info("게시글 삭제! '{}' : 유저 이름 : '{}'", parcelOut.getId(), petmilyUsers.getUserNickName());
             parcelOut.setDelete(true);
@@ -97,6 +102,10 @@ public class ParcelOutService {
 
 
     // 분양글 작성
+    @Caching(evict = {
+            @CacheEvict(value="parcelOutFindById", allEntries = true, cacheManager = "cacheManager"),
+            @CacheEvict(value="listParcelOutFindAllList", allEntries = true, cacheManager = "cacheManager")
+    })
     public ResponseEntity<?> postParcelOut(ParcelOutRequestDto parcelOutRequestDto, HttpServletRequest httpServletRequest) throws ParseException {
         if(validateData(parcelOutRequestDto).getStatusCodeValue() != 200){
             return validateData(parcelOutRequestDto);
@@ -107,7 +116,9 @@ public class ParcelOutService {
     }
 
     // 특정 분양글 읽기
-    @Cacheable("parcelOutFindById")
+    @Caching(cacheable = {
+            @Cacheable("parcelOutFindById")
+    })
     public ResponseEntity<?> getParcelOut(int id) {
         ParcelOut parcelOut = findById(id);
         if(parcelOut != null){
@@ -118,7 +129,9 @@ public class ParcelOutService {
         return new ResponseEntity<>(new DefaultResponseDto(409, "조회되는 게시글이 없습니다."), HttpStatus.CONFLICT);
     }
 
-    @Cacheable("listParcelOutFindAllList")
+    @Caching(cacheable = {
+            @Cacheable("listParcelOutFindAllList")
+    })
     public ResponseEntity<?> getParcelOutList(int id) {
         List<ParcelOut> parcelOutList = findAllList(id);
         if(parcelOutList != null){
@@ -145,6 +158,10 @@ public class ParcelOutService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value="parcelOutFindById", allEntries = true, cacheManager = "cacheManager"),
+            @CacheEvict(value="listParcelOutFindAllList", allEntries = true, cacheManager = "cacheManager")
+    })
     public ResponseEntity<?> updateParcelOut(ParcelOut parcelOut, HttpServletRequest httpServletRequest) {
         ParcelOut parcelOut1 = update(parcelOut, httpServletRequest);
         if(parcelOut1 != null){
@@ -153,9 +170,13 @@ public class ParcelOutService {
         return new ResponseEntity<>(new DefaultResponseDto(409, "비인가된 접근입니다."), HttpStatus.CONFLICT);
     }
 
-    public ResponseEntity<?> deleteParcelOut(ParcelOut parcelOut, HttpServletRequest httpServletRequest) {
+    @Caching(evict = {
+            @CacheEvict(value="parcelOutFindById", allEntries = true, cacheManager = "cacheManager"),
+            @CacheEvict(value="listParcelOutFindAllList", allEntries = true, cacheManager = "cacheManager")
+    })
+    public ResponseEntity<?> deleteParcelOut(int id, HttpServletRequest httpServletRequest) {
 
-        if(delete(parcelOut, httpServletRequest)){
+        if(delete(id, httpServletRequest)){
             return new ResponseEntity<>(new DefaultResponseDto(200, "성공적으로 삭제되었습니다."), HttpStatus.OK);
         }
         return new ResponseEntity<>(new DefaultResponseDto(409, "비인가된 접근입니다."), HttpStatus.CONFLICT);
