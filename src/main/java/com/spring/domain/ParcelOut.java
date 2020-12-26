@@ -63,8 +63,8 @@ public class ParcelOut {
     private boolean isHide = false;
 
     // 유저가 삭제할 경우
-    @Column(name = "id_delete", nullable = false, columnDefinition = "TINYINT(4)")
-    private boolean idDelete = false;
+    @Column(name = "is_delete", nullable = false, columnDefinition = "TINYINT(4)")
+    private boolean isDelete = false;
 
 
 

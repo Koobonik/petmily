@@ -1,5 +1,7 @@
 package com.spring.util;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +30,7 @@ public class ValidSomething {
         return err;
     }
 
-    public static boolean isValidPassword(String password){
+    public static boolean isValidPassword(String password) {
         boolean err = false;//                                       `~!@#$%^&*()_+
         String regex = "^.*(?=^.{8,32}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[.,/\\\\!@#$%^*+=-]).*$"; //숫자만
         Pattern p = Pattern.compile(regex);
@@ -38,12 +40,12 @@ public class ValidSomething {
         }
         return err;
     }
-    
-    public static boolean isValidName(String name){
+
+    public static boolean isValidName(String name) {
         boolean err = false;//
         //String regex = "^.*(?=^.{2,20}$)[가-힣0-9a-zA-Z].*$"; //숫자만\ //(?=.*\d)(?=.*[a-zA-Z])
 //        String regex = "^.*(?=^.{2,20}$)([가-힣])*([a-zA-Z])*([0-9]).*$";
-        if(!canUseNickName(name)){
+        if (!canUseNickName(name)) {
             return false;
         }
         String regex = "^.*(?=^.{2,14}$)([가-힣-a-z-A-Z])+[가-힣a-zA-Z0-9]*$";
@@ -78,10 +80,18 @@ public class ValidSomething {
     public static boolean isValidDate(String date) {
         boolean err = false;
         String regex = "^(19|20)\\d{2}[- /.]*(0[1-9]|1[012])[- /.]*(0[1-9]|[12][0-9]|3[01])$"; // 날짜 정규식
+//        String regex = "^(19|20)\\d{2}[- /.]*(0[0-9]|0[012])[- /.]*(0[0-9]|[12][0-9]|3[01])$"; // 날짜 정규식
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(date);
         if (m.matches()) {
-            err = true;
+            try {
+                SimpleDateFormat  dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                dateFormat.setLenient(false);
+                dateFormat.parse(date);
+                err = true;
+            } catch (Exception e) {
+                err = false;
+            }
         }
         return err;
     }

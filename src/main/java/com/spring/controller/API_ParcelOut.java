@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 
 @RestController
 @AllArgsConstructor
@@ -26,7 +27,7 @@ public class API_ParcelOut {
     })
     @ApiOperation(value = "분양글 작성", notes = "")
     @PostMapping("postParcelOut")
-    public ResponseEntity<?> writeParcelOut(@RequestBody ParcelOutRequestDto parcelOutRequestDto, HttpServletRequest httpServletRequest){
+    public ResponseEntity<?> writeParcelOut(@RequestBody ParcelOutRequestDto parcelOutRequestDto, HttpServletRequest httpServletRequest) throws ParseException {
         return parcelOutService.postParcelOut(parcelOutRequestDto, httpServletRequest);
     }
 

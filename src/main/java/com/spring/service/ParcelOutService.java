@@ -5,9 +5,11 @@ import com.spring.domain.ParcelOut;
 import com.spring.domain.ParcelOutRepository;
 import com.spring.dto.requestDto.ParcelOutRequestDto;
 import com.spring.dto.responseDto.DefaultResponseDto;
+import com.spring.util.DateCreator;
 import com.spring.util.ValidSomething;
 import com.spring.util.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 
@@ -28,6 +32,7 @@ public class ParcelOutService {
     private final ParcelOutRepository parcelOutRepository;
     private final JwtTokenProvider jwtTokenProvider;
     // 저장 C
+
     public ParcelOut save(ParcelOut parcelOut){
         log.info("게시글 저장 '{}'", parcelOut.getId());
         return parcelOutRepository.save(parcelOut);
@@ -71,7 +76,7 @@ public class ParcelOutService {
         PetmilyUsers petmilyUsers = jwtTokenProvider.getPetmilyUsersFromToken(httpServletRequest);
         if(petmilyUsers.getId() == parcelOut.getUserId() && !petmilyUsers.getIsOut()){
             log.info("게시글 삭제! '{}' : 유저 이름 : '{}'", parcelOut.getId(), petmilyUsers.getUserNickName());
-            parcelOut.setIdDelete(true);
+            parcelOut.setDelete(true);
             parcelOutRepository.save(parcelOut);
             return true;
         }
@@ -80,11 +85,12 @@ public class ParcelOutService {
     }
 
 
-    public ResponseEntity<?> postParcelOut(ParcelOutRequestDto parcelOutRequestDto, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<?> postParcelOut(ParcelOutRequestDto parcelOutRequestDto, HttpServletRequest httpServletRequest) throws ParseException {
         if(validateData(parcelOutRequestDto).getStatusCodeValue() != 200){
             return validateData(parcelOutRequestDto);
         }
         PetmilyUsers petmilyUsers = jwtTokenProvider.getPetmilyUsersFromToken(httpServletRequest);
+
         return new ResponseEntity<>(save(parcelOutRequestDto.toEntity(petmilyUsers.getId())), HttpStatus.OK);
     }
 
@@ -108,13 +114,18 @@ public class ParcelOutService {
         return new ResponseEntity<>(new DefaultResponseDto(304, "마지막 게시글 입니다."), HttpStatus.NOT_MODIFIED);
     }
 
+    @SneakyThrows
     private ResponseEntity<?> validateData(ParcelOutRequestDto parcelOutRequestDto){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if(parcelOutRequestDto.getDescription() == null || parcelOutRequestDto.getTitle() == null
                 || parcelOutRequestDto.getPetGender() == null || parcelOutRequestDto.getPetKind() == null || parcelOutRequestDto.getPetName() == null){
             return new ResponseEntity<>(new DefaultResponseDto(409, "비어있는 값이 있습니다."), HttpStatus.CONFLICT);
         }
-        else if(!parcelOutRequestDto.getPetBirthDay().equals("null") && !ValidSomething.isValidDate(parcelOutRequestDto.getPetBirthDay())){
+        if(!parcelOutRequestDto.getPetBirthDay().equals("null") && !ValidSomething.isValidDate(parcelOutRequestDto.getPetBirthDay())){
             return new ResponseEntity<>(new DefaultResponseDto(409,"생일 포맷이 맞지 않습니다."), HttpStatus.CONFLICT);
+        }
+        if(new DateCreator().getTimestamp().before(dateFormat.parse(parcelOutRequestDto.getPetBirthDay()))){
+            return new ResponseEntity<>(new DefaultResponseDto(409,"생일이 오늘보다 미래일 수 없습니다"), HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

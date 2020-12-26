@@ -1,12 +1,15 @@
 package com.spring.dto.requestDto;
 
 import com.spring.domain.ParcelOut;
+import com.spring.util.DateCreator;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.List;
 
 
@@ -39,7 +42,8 @@ public class ParcelOutRequestDto{
     private List<String> images;
 
 
-    public ParcelOut toEntity(int userId){
+    public ParcelOut toEntity(int userId) throws ParseException {
+        Timestamp today = new DateCreator().getTimestamp();
         return new ParcelOut().builder()
                 .title(title)
                 .description(description)
@@ -49,6 +53,8 @@ public class ParcelOutRequestDto{
                 .petGender(petGender)
                 .images(images)
                 .userId(userId)
+                .createdDate(today)
+                .updateDate(today)
                 .build();
     }
 }

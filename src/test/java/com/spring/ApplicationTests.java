@@ -24,7 +24,7 @@ class ApplicationTests {
         System.out.println(aes256Cipher.AES_Decode("66Pt4I7SrkIU9a3BeauAOn2UpvJ8P+qOIX/2wxo5EnU="));
         System.out.println(ValidSomething.canUseNickName("구백군"));
         System.out.println(aes256Cipher.AES_Decode("VowNY3dnXQPCyMxYM6NKog=="));
-        System.out.println(ValidSomething.isValidDate("2020-8-32"));
+        System.out.println(ValidSomething.isValidDate("2020-11-31"));
     }
 
 }
