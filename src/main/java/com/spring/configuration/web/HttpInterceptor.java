@@ -69,7 +69,7 @@ public class HttpInterceptor extends HandlerInterceptorAdapter {
 			return false;
 		}
 	}
-	// 밑에 있는 uri는 무시한다는 뜻
+	// 밑에 있는 uri는 토큰 필터를 거치치않는다는 뜻
 	public static boolean tokenFilter(HttpServletRequest re){
 		if(re.getRequestURI().contains("signIn")||
 				re.getRequestURI().contains("loginManager")||
@@ -77,8 +77,8 @@ public class HttpInterceptor extends HandlerInterceptorAdapter {
 				re.getRequestURI().contains("renewalToken")||
 				re.getRequestURI().contains("sendAuthNumber")||
 				re.getRequestURI().contains("validateAuthNumber")||
-				re.getRequestURI().contains("region/city")||
-				re.getRequestURI().contains("region/region")||
+				re.getRequestURI().contains("region/region1")||
+				re.getRequestURI().contains("region/region2")||
 				re.getRequestURI().contains("signup/") ||
 				re.getRequestURI().contains("find/") ){
 			return false;

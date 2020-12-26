@@ -40,7 +40,7 @@ public class API_Auth {
             @ApiResponse(code = 200, message = "유저의 정보를 성공적으로 가져올 경우", response = UserResponseDto.class)
     })
     @ApiOperation(value = "토큰으로 유저 정보 가져오기", notes = "토큰이 유효하다면 유저의 정보를 반환 합니다.")
-    @PostMapping("/getUserDataUsingToken")
+    @GetMapping("/getUserDataUsingToken")
     public ResponseEntity<?> getUserDataUsingToken(HttpServletRequest httpServletRequest){
         return new ResponseEntity<>(petmilyUsersService.getUserDataUsingToken(httpServletRequest), HttpStatus.OK);
     }
