@@ -20,6 +20,5 @@ public class NaverLocationResponseDto {
     private int total;
     private int start;
     private int display;
-    private String category;
     private Items[] items;
 }
