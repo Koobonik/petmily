@@ -5,6 +5,7 @@ import com.spring.domain.Location1Repository;
 import com.spring.domain.Location2;
 import com.spring.domain.Location2Repository;
 import com.spring.dto.responseDto.DefaultResponseDto;
+import com.spring.service.LocationSearchService;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URISyntaxException;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -28,6 +30,7 @@ import java.util.concurrent.CompletableFuture;
 public class API_Region {
     private final Location1Repository location1Repository;
     private final Location2Repository location2Repository;
+    private final LocationSearchService locationSearchService;
         // 토큰 재발급
 
     // @ApiImplicitParams({@ApiImplicitParam(name = "refreshJwt", value = "로그인후 JWT 토큰을 발급받아야 합니다.", required = true, dataType = "String", paramType = "header")})
@@ -57,5 +60,17 @@ public class API_Region {
         Location1 region1 = location1Repository.findByName(region);
         if(region1 == null) return CompletableFuture.completedFuture(new ResponseEntity<>(new DefaultResponseDto(409, region + " 에 매핑되는 구, 군이 없습니다."), HttpStatus.CONFLICT));
         return CompletableFuture.completedFuture(new ResponseEntity<>(location2Repository.findAllByRegion(region1.getId()), HttpStatus.OK));
+    }
+
+
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "위치에 대한 데이터 반환", response = Location1[].class)
+    })
+    @ApiOperation(value = "위치 반환", notes = "")
+    @GetMapping("search")
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> search(@ApiParam(value = "지역이름 ex) 경기도", example = "경기도") @RequestParam(required = false) String query) throws URISyntaxException {
+        log.info("'{}' 로 검색",query);
+        return locationSearchService.searchLocation(query);
     }
 }
