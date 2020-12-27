@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.dto.requestDto.MessagesRequestDto;
 import com.spring.dto.requestDto.SmsRequestDto;
 import com.spring.dto.responseDto.GeocodingResponseDto;
+import com.spring.dto.responseDto.NaverLocationResponseDto;
 import com.spring.dto.responseDto.SendSmsResponseDto;
 import com.spring.util.DateCreator;
 import com.spring.util.yml.ApplicationGeocoding;
@@ -63,6 +64,30 @@ public class LocationSearchService {
 //        ResponseEntity<GeocodingResponseDto> geocodingResponseDto = restTemplate.exchange(url, HttpMethod.GET, body, GeocodingResponseDto.class);
         System.out.println(geocodingResponseDto.getStatusCodeValue());
         return geocodingResponseDto;
+    }
+
+
+    public NaverLocationResponseDto searchLocation2(String query) throws URISyntaxException {
+
+
+        // 헤더에서 여러 설정값들을 잡아준다.
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("X-Naver-Client-Id", applicationGeocoding.getClientid());
+        headers.set("X-Naver-Client-Secret", applicationGeocoding.getClientsecret());
+
+        // 위에서 조립한 jsonBody와 헤더를 조립한다.
+        HttpEntity<String> body = new HttpEntity<>( headers);
+        log.info("헤더 : '{}'",body);
+        // restTemplate로 post 요청을 보낸다. 별 일 없으면 202 코드 반환된다.
+        RestTemplate restTemplate = new RestTemplate();
+        query = URLEncoder.encode(query, StandardCharsets.UTF_8);
+        String url = URLEncoder.encode("https://openapi.naver.com/v1/search/local.json"+query, StandardCharsets.UTF_8);
+        log.info("query -> '{}'", query);
+        ResponseEntity<NaverLocationResponseDto> naverLocationResponseDtoResponseEntity = restTemplate.exchange(new URI("https://openapi.naver.com/v1/search/local.json?query="+query+"&display=10&start=1&sort=random"), HttpMethod.GET, body, NaverLocationResponseDto.class);
+//        ResponseEntity<GeocodingResponseDto> geocodingResponseDto = restTemplate.exchange(url, HttpMethod.GET, body, GeocodingResponseDto.class);
+        System.out.println(naverLocationResponseDtoResponseEntity.getBody());
+        return naverLocationResponseDtoResponseEntity.getBody();
     }
 
 }

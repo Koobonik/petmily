@@ -68,9 +68,8 @@ public class API_Region {
     })
     @ApiOperation(value = "위치 반환", notes = "")
     @GetMapping("search")
-    @Transactional(readOnly = true)
     public ResponseEntity<?> search(@ApiParam(value = "지역이름 ex) 경기도", example = "경기도") @RequestParam(required = false) String query) throws URISyntaxException {
         log.info("'{}' 로 검색",query);
-        return locationSearchService.searchLocation(query);
+        return new ResponseEntity<>(locationSearchService.searchLocation2(query),HttpStatus.OK);
     }
 }

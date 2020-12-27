@@ -13,4 +13,6 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationGeocoding {
     private String key;
     private String keyid;
+    private String clientid;
+    private String clientsecret;
 }
