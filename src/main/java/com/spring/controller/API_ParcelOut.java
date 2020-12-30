@@ -22,7 +22,7 @@ import java.text.ParseException;
 
 public class API_ParcelOut {
     private final ParcelOutService parcelOutService;
-    // C
+    // 
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공적으로 저장 후 게시글에 대한 데이터 반환", response = ParcelOut.class)
     })
@@ -58,7 +58,6 @@ public class API_ParcelOut {
     @ApiOperation(value = "분양글 업데이트", notes = "")
     @PatchMapping("updateParcelOut")
     public ResponseEntity<?> updateParcelOut(@RequestBody ParcelOut parcelOut, HttpServletRequest httpServletRequest){
-
         return parcelOutService.updateParcelOut(parcelOut , httpServletRequest);
     }
 
