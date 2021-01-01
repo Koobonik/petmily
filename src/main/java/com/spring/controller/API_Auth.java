@@ -90,7 +90,6 @@ public class API_Auth {
         return emailAuthService.authEmail(emailAuthRequestDto, httpServletRequest);
     }
 
-
 //    // 공개키 발급
 //    @ApiOperation(value = "공개키 api", notes = "로그인이나 회원가입시 쓰이는 공개키 가져오는 api")
 //    @GetMapping("/getPublicKey")
