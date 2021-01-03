@@ -19,7 +19,6 @@ import java.text.ParseException;
 @Api(value = "이거저거 테스트해보는 API", tags = "분양 게시글")
 @RequestMapping("api/v1/parcelOut")
 @Log4j2
-
 public class API_ParcelOut {
     private final ParcelOutService parcelOutService;
     // 

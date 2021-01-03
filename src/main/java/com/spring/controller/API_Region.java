@@ -26,7 +26,6 @@ import java.util.concurrent.CompletableFuture;
 @Api(value = "이거저거 테스트해보는 API", tags = "지역")
 @RequestMapping("api/v1/region")
 @Log4j2
-
 public class API_Region {
     private final Location1Repository location1Repository;
     private final Location2Repository location2Repository;
