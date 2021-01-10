@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.spring.dto.requestDto.*;
 import com.spring.dto.responseDto.DefaultResponseDto;
 import com.spring.dto.responseDto.JwtResponseDto;
-import com.spring.service.EmailAuthService;
 import com.spring.service.PetmilyUsersService;
 import com.spring.service.SmsAuthService;
 import com.spring.util.jwt.JwtTokenProvider;
@@ -34,7 +33,6 @@ public class API_User {
     private final JwtTokenProvider jwtTokenProvider;
     private final SmsAuthService smsAuthService;
     private final PetmilyUsersService petmilyUsersService;
-    private final EmailAuthService emailAuthService;
 
     @ApiResponses({
             @ApiResponse(code = 200, message = "회원가입이 정상적으로 이루어졌을 경우", response = JwtResponseDto.class),
