@@ -56,19 +56,19 @@ public class API_User {
     }
 
 
-    @GetMapping("jwtValidation")
-    public ResponseEntity<?> jwtValidation(@RequestParam String jwt){
-        // 헤더에서 토큰값 추출
-        log.info(jwt);
-        // 토큰값이 유효한 경우
-        if(jwtTokenProvider.validateToken(jwt)) {
-            log.info("토큰 유효함");
-            // 유저 정보 추출 (아이디)
-            log.info(jwtTokenProvider.getUserPk(jwt));
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
-    }
+//    @GetMapping("jwtValidation")
+//    public ResponseEntity<?> jwtValidation(@RequestParam String jwt){
+//        // 헤더에서 토큰값 추출
+//        log.info(jwt);
+//        // 토큰값이 유효한 경우
+//        if(jwtTokenProvider.validateToken(jwt)) {
+//            log.info("토큰 유효함");
+//            // 유저 정보 추출 (아이디)
+//            log.info(jwtTokenProvider.getUserPk(jwt));
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(HttpStatus.CONFLICT);
+//    }
 
     // 회원가입할 때 유저 닉네임 사용 가능한지 봐야함
     @Transactional
