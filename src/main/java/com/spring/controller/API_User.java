@@ -114,7 +114,6 @@ public class API_User {
         return smsAuthService.validateAuthNumber(validateAuthNumberRequestDto);
     }
 
-    // 토큰 재발급
     //@ApiImplicitParams({@ApiImplicitParam(name = "refreshJwt", value = "로그인후 JWT 토큰을 발급받아야 합니다.", required = true, dataType = "String", paramType = "header")})
     @ApiResponses({
             @ApiResponse(code = 200, message = "JWT (Json Web Token) 발행", response = JwtResponseDto.class),
