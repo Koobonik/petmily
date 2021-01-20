@@ -28,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Log4j2
+// 분양 게시글
 public class ParcelOutService {
 
     private final ParcelOutRepository parcelOutRepository;
