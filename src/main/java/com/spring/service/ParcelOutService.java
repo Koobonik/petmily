@@ -111,7 +111,6 @@ public class ParcelOutService {
             return validateData(parcelOutRequestDto);
         }
         PetmilyUsers petmilyUsers = jwtTokenProvider.getPetmilyUsersFromToken(httpServletRequest);
-
         return new ResponseEntity<>(save(parcelOutRequestDto.toEntity(petmilyUsers.getId())), HttpStatus.OK);
     }
 
@@ -175,7 +174,6 @@ public class ParcelOutService {
             @CacheEvict(value="listParcelOutFindAllList", allEntries = true, cacheManager = "cacheManager")
     })
     public ResponseEntity<?> deleteParcelOut(int id, HttpServletRequest httpServletRequest) {
-
         if(delete(id, httpServletRequest)){
             return new ResponseEntity<>(new DefaultResponseDto(200, "성공적으로 삭제되었습니다."), HttpStatus.OK);
         }
